@@ -247,6 +247,15 @@ document.addEventListener('keydown', e => {
     document.body.classList.toggle('warp');
   }
 });
+// Toque na área do jogo para pular (versão mobile)
+document.querySelector('.game-container').addEventListener('touchstart', () => {
+  jump();
+});
+
+// Permitir pulo ao tocar na tela (para celulares)
+document.addEventListener('touchstart', () => {
+  jump();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   updateRecordDisplay();
