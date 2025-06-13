@@ -1,0 +1,269 @@
+/* ===== FUNDO PADRÃO COM GRADIENTE ANIMADO ===== */
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(270deg, #a8edea, #fed6e3, #fcb69f, #ffecd2);
+  background-size: 800% 800%;
+  animation: backgroundAnimation 20s ease infinite;
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+@keyframes backgroundAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===== DOBRA ESPACIAL (warp mode) ===== */
+body.warp {
+  background: linear-gradient(45deg, #0ff, #f0f, #00f, #ff0, #0f0, #f00);
+  background-size: 600% 600%;
+  animation: flashGradient 0.3s linear infinite;
+}
+
+@keyframes flashGradient {
+  0%, 100% { background-position: 0% 50%; }
+  25%, 75% { background-position: 100% 50%; }
+  50% { background-position: 0% 50%; }
+}
+
+body.warp::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 300%;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  animation: warpSpeed 0.5s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+@keyframes warpSpeed {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+/* ===== CONTAINER DO JOGO ===== */
+.game-container {
+  position: relative;
+  width: 600px;
+  height: 150px;
+  border: 3px solid #333;
+  background-color: #ffffffcc;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 2;
+}
+
+/* ===== PERSONAGEM ===== */
+#dino {
+  position: absolute;
+  left: 50px;
+  width: 40px;
+  height: 40px;
+  background-image: url('dino.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 3;
+}
+
+/* ===== OBSTÁCULOS ===== */
+.obstacle {
+  position: absolute;
+  width: 30px;
+  background-color: #333;
+  border-radius: 3px;
+  animation-timing-function: linear;
+}
+
+.obstacle.ground {
+  bottom: 0;
+  height: 40px;
+  animation-name: obstacleMove;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+.obstacle.house {
+  background-image: url('obstacles/house.png');
+}
+.obstacle.building {
+  background-image: url('obstacles/building.png');
+}
+.obstacle.truck {
+  background-image: url('obstacles/truck.png');
+}
+
+.obstacle.air {
+  bottom: 70px;
+  height: 30px;
+  animation-name: obstacleMove;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.obstacle.drone {
+  background-image: url('obstacles/drone.png');
+}
+.obstacle.bird {
+  background-image: url('obstacles/bird.png');
+}
+.obstacle.balloon {
+  background-image: url('obstacles/balloon.png');
+}
+
+@keyframes obstacleMove {
+  from { right: -40px; }
+  to { right: 100%; }
+}
+
+@keyframes obstacleMoveInverted {
+  from { left: -40px; }
+  to { left: 100%; }
+}
+
+/* ===== INVERTIDO ===== */
+body.inverted {
+  transform: rotate(180deg);
+}
+body.inverted * {
+  transform: rotate(180deg);
+}
+
+/* ===== PONTUAÇÃO ===== */
+#score {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  z-index: 4;
+}
+
+/* ===== GAME OVER ===== */
+#game-over {
+  display: none;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 2px solid #333;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 5;
+}
+#game-over button {
+  margin-top: 10px;
+  padding: 5px 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ===== MENU INICIAL ===== */
+#menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(17, 17, 17, 0.9);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+#menu h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+#menu button {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ===== MENU DE DIFICULDADE ===== */
+#difficulty-selection {
+  margin-bottom: 20px;
+  text-align: center;
+}
+#difficulty-selection p {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.difficulty-btn {
+  margin: 0 5px;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+.difficulty-btn:hover {
+  background-color: #666;
+}
+.difficulty-btn.active {
+  background-color: #00c853;
+}
+
+/* ===== RECORDES ===== */
+#record-display {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255,255,255,0.85);
+  border: 2px solid #444;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 6;
+  font-weight: bold;
+  color: #222;
+}
+#record-display p {
+  margin: 4px 0;
+}
+
+/* ===== NUVENS ===== */
+.cloud {
+  position: absolute;
+  width: 100px;
+  height: 60px;
+  background: url('https://i.imgur.com/7Vb6bVB.png') no-repeat center/contain;
+  animation: cloudMove 60s linear infinite;
+  opacity: 0.8;
+  z-index: 1;
+}
+.cloud:nth-child(1) { top: 40px; left: -150px; animation-delay: 0s; }
+.cloud:nth-child(2) { top: 80px; left: -300px; animation-delay: 10s; }
+.cloud:nth-child(3) { top: 60px; left: -450px; animation-delay: 20s; }
+
+@keyframes cloudMove {
+  from { left: -200px; }
+  to { left: 100vw; }
+}

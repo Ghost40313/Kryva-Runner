@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jogo do Dinossauro KRYVA</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6zNX0aQ5fJOBcbjlq-y4eJS1krSqhlkw",
+      authDomain: "kryva-runner.firebaseapp.com",
+      projectId: "kryva-runner",
+      storageBucket: "kryva-runner.appspot.com",
+      messagingSenderId: "279842290300",
+      appId: "1:279842290300:web:c0484c8a38302517e927f9",
+      databaseURL: "https://kryva-runner-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <div id="menu">
+    <h1>KRYVA RUNNER</h1>
+    <div id="difficulty-selection">
+      <p>Escolha a dificuldade:</p>
+      <button class="difficulty-btn" data-mode="easy">Fácil</button>
+      <button class="difficulty-btn" data-mode="medium">Médio</button>
+      <button class="difficulty-btn" data-mode="hard">Difícil</button>
+    </div>
+    <button id="startBtn" disabled>Jogar</button>
+    <div id="ranking">
+      <h3>Ranking Global</h3>
+      <ul id="ranking-list"></ul>
+    </div>
+  </div>
+
+  <div class="game-container">
+    <div id="dino"></div>
+    <div id="obstacles-container"></div>
+    <div id="score">Pontuação: 0</div>
+    <div id="game-over">
+      GAME OVER<br>
+      <button id="restart">Reiniciar</button>
+    </div>
+  </div>
+
+  <div id="record-display">
+    <p>Recorde: <span id="record-value">0</span></p>
+    <p>Dificuldade: <span id="difficulty-label">Fácil</span></p>
+  </div>
+
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
