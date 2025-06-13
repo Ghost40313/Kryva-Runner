@@ -248,9 +248,10 @@ document.addEventListener('keydown', e => {
   }
 });
 // Toque na área do jogo para pular (versão mobile)
-document.querySelector('.game-container').addEventListener('touchstart', () => {
+document.getElementById('game-container').addEventListener('touchstart', () => {
   jump();
 });
+
 
 // Permitir pulo ao tocar na tela (para celulares)
 document.addEventListener('touchstart', () => {
