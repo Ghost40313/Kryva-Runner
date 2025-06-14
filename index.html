@@ -36,8 +36,7 @@
     </div>
   </div>
 
-  <!-- Game area -->
-  <div class="game-container" id="gameArea" style="touch-action: manipulation;">
+  <div class="game-container" id="game-container" style="touch-action: manipulation;">
     <div id="dino"></div>
     <div id="obstacles-container"></div>
     <div id="score">Pontuação: 0</div>
@@ -55,16 +54,6 @@
   <div class="cloud"></div>
   <div class="cloud"></div>
   <div class="cloud"></div>
-
-  <script>
-    // Adiciona suporte a toque para pular no celular
-    document.addEventListener("DOMContentLoaded", () => {
-      const gameArea = document.querySelector('.game-container');
-      gameArea.addEventListener('touchstart', () => {
-        if (typeof jump === 'function') jump();
-      });
-    });
-  </script>
 
   <script src="script.js"></script>
 </body>

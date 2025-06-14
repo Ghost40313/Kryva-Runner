@@ -1,3 +1,5 @@
+// script.js
+
 const db = firebase.database();
 const rankingRef = db.ref('scores');
 
@@ -121,8 +123,6 @@ function gameOver() {
   clearInterval(scoreInterval);
   clearInterval(obstacleSpawner);
   clearInterval(collisionCheck);
-
-  // Resetar visuais
   document.body.classList.remove('warp');
   if (isInverted) {
     document.body.classList.remove('inverted');
@@ -161,20 +161,17 @@ function resetGame() {
     score++;
     scoreEl.textContent = "Pontuação: " + score;
 
-    // Aumentar dificuldade progressivamente
     if (score % 30 === 0) {
       if (selectedDifficulty === 'easy' && speed > 0.6) speed -= 0.07;
       else if (selectedDifficulty === 'medium' && speed > 0.4) speed -= 0.05;
       else if (selectedDifficulty === 'hard' && speed > 0.3) speed -= 0.02;
     }
 
-    // Ativar dobra espacial (piscar colorido) aos 1000 pontos
     if (score >= 1000 && !warpModeActivated) {
       document.body.classList.add('warp');
       warpModeActivated = true;
     }
 
-    // Inversão automática aos 1000 pontos
     if (score >= 1000 && !hasInvertedAutomatically) {
       document.body.classList.add('inverted');
       isInverted = true;
@@ -183,7 +180,6 @@ function resetGame() {
       dino.style.bottom = '';
     }
 
-    // Desinverter tela aos 1500 pontos
     if (score >= 1500 && isInverted) {
       document.body.classList.remove('inverted');
       isInverted = false;
@@ -191,7 +187,6 @@ function resetGame() {
       dino.style.top = '';
     }
 
-    // Trocar música aos 1000 pontos
     if (score >= 1000 && !musicChanged) {
       music.pause();
       music = new Audio('music2.mp3');
@@ -247,19 +242,9 @@ document.addEventListener('keydown', e => {
     document.body.classList.toggle('warp');
   }
 });
-// Toque na área do jogo para pular (versão mobile)
-document.getElementById('game-container').addEventListener('touchstart', () => {
-  jump();
-});
 
-
-// Permitir pulo ao tocar na tela (para celulares)
-document.addEventListener('touchstart', () => {
-  jump();
-});
-
-document.addEventListener('touchstart', (e) => {
-  // Ignora toques em botões ou menus
+// Pulo ao tocar na tela (mobile)
+document.querySelector('.game-container').addEventListener('touchstart', e => {
   if (e.target.closest('#menu') || e.target.closest('#restart') || e.target.closest('#startBtn')) return;
   jump();
 });
