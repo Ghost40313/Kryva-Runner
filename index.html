@@ -21,6 +21,19 @@
   </script>
 </head>
 <body>
+
+  <!-- Seletor de dificuldade flutuante -->
+  <div id="difficulty-toggle" style="position: absolute; top: 10px; left: 10px; z-index: 20;">
+    <label for="difficulty-select" style="color: white; font-weight: bold;">DIFICULDADE:</label><br>
+    <select id="difficulty-select">
+      <option value="easy">Fácil</option>
+      <option value="medium">Médio</option>
+      <option value="hard">Difícil</option>
+      <option value="expert">Expert</option>
+    </select>
+  </div>
+
+  <!-- MENU INICIAL -->
   <div id="menu">
     <h1>KRYVA RUNNER</h1>
     <div id="difficulty-selection">
@@ -28,6 +41,7 @@
       <button class="difficulty-btn" data-mode="easy">Fácil</button>
       <button class="difficulty-btn" data-mode="medium">Médio</button>
       <button class="difficulty-btn" data-mode="hard">Difícil</button>
+      <button class="difficulty-btn" data-mode="expert">Expert</button>
     </div>
     <button id="startBtn" disabled>Jogar</button>
     <div id="ranking">
@@ -36,7 +50,8 @@
     </div>
   </div>
 
-  <div class="game-container" id="game-container" style="touch-action: manipulation;">
+  <!-- JOGO -->
+  <div class="game-container" id="gameArea" style="touch-action: manipulation;">
     <div id="dino"></div>
     <div id="obstacles-container"></div>
     <div id="score">Pontuação: 0</div>
@@ -46,15 +61,18 @@
     </div>
   </div>
 
+  <!-- RECORDES -->
   <div id="record-display">
     <p>Recorde: <span id="record-value">0</span></p>
     <p>Dificuldade: <span id="difficulty-label">Fácil</span></p>
   </div>
 
+  <!-- NUVENS -->
   <div class="cloud"></div>
   <div class="cloud"></div>
   <div class="cloud"></div>
 
+  <!-- SOMENTE UM SCRIPT: todo controle fica no script.js -->
   <script src="script.js"></script>
 </body>
 </html>
