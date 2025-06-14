@@ -1,3 +1,4 @@
+
 // script.js
 
 const db = firebase.database();
@@ -117,8 +118,8 @@ function checkCollision() {
 
     if (autoJump && !isJumping && dist > 10 && dist < antecipacao) {
       const isGround = obs.classList.contains('ground');
-      const isLowAir = obs.classList.contains('air') && obsRect.bottom > dinoRect.top + 30;
-      if (isGround || (isLowAir && !isInverted)) {
+      const isLowAir = obs.classList.contains('air') && obsRect.bottom > dinoRect.top + 30 && !isInverted;
+      if (isGround || isLowAir) {
         jump(tempoExtraNoAr);
       }
     }
@@ -280,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateRecordDisplay();
 });
 
-// Trapaça: ativar ao clicar 3x em "Recorde"
+// Trapaça por clique em recorde
 let tapCount = 0;
 let lastTapTime = 0;
 recordValue.addEventListener('click', () => {
@@ -297,30 +298,31 @@ recordValue.addEventListener('click', () => {
   lastTapTime = now;
 });
 
-// Trapaça por toque no celular (3 toques no #record-display)
+// Trapaça por toque no celular
 (function () {
   let touchCount = 0;
   let firstTouchTime = 0;
   const cheatArea = document.getElementById('cheat-touch-area');
 
-  cheatArea.addEventListener('touchstart', () => {
-    const now = Date.now();
+  if (cheatArea) {
+    cheatArea.addEventListener('touchstart', () => {
+      const now = Date.now();
 
-    if (touchCount === 0) {
-      firstTouchTime = now;
-      touchCount = 1;
-    } else {
-      if (now - firstTouchTime <= 2000) {
-        touchCount++;
-        if (touchCount >= 3) {
-          autoJump = true; // <-- agora funciona corretamente
-          console.log("Trapaça ativada via toque.");
-          touchCount = 0;
-        }
-      } else {
-        touchCount = 1;
+      if (touchCount === 0) {
         firstTouchTime = now;
+        touchCount = 1;
+      } else {
+        if (now - firstTouchTime <= 2000) {
+          touchCount++;
+          if (touchCount >= 3) {
+            autoJump = true;
+            touchCount = 0;
+          }
+        } else {
+          touchCount = 1;
+          firstTouchTime = now;
+        }
       }
-    }
-  });
+    });
+  }
 })();
