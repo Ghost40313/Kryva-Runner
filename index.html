@@ -72,26 +72,38 @@
   <div class="cloud"></div>
   <div class="cloud"></div>
 
-  <!-- SOMENTE UM SCRIPT: todo controle fica no script.js -->
-  <script src="script.js"></script>
+  <!-- AVISO DE ATUALIZAÇÃO NO RODAPÉ -->
   <footer id="update-advice" style="position: fixed; bottom: 0; width: 100%; background: #111; color: #fff; font-size: 14px; text-align: center; padding: 10px 40px 10px 10px; z-index: 999;">
-  <p style="margin: 0;">
-    ⚠️ Se o jogo não estiver funcionando corretamente, atualize a página:
-    <strong>no PC, aperte Ctrl + F5</strong> •
-    <strong>no celular, toque no botão de recarregar e segure para limpar o cache</strong>
-  </p>
-  <button onclick="document.getElementById('update-advice').style.display='none'" 
-    style="position: absolute; right: 10px; top: 10px; background: none; border: none; color: white; font-size: 18px; cursor: pointer;">
-    ✖
-  </button>
-</footer>
+    <p style="margin: 0;">
+      ⚠️ Se o jogo não estiver funcionando corretamente, atualize a página:
+      <strong>no PC, aperte Ctrl + F5</strong> •
+      <strong>no celular, toque no botão de recarregar e segure para limpar o cache</strong>
+    </p>
+    <button id="close-advice-btn"
+      style="position: absolute; right: 10px; top: 10px; background: none; border: none; color: white; font-size: 18px; cursor: pointer;">
+      ✖
+    </button>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const closeBtn = document.getElementById('close-advice-btn');
+      const footer = document.getElementById('update-advice');
+      if (closeBtn && footer) {
+        closeBtn.addEventListener('click', () => {
+          footer.style.display = 'none';
+        });
+      }
+    });
+  </script>
+<!-- AVISO PARA ROTACIONAR O CELULAR -->
+<div id="rotate-warning" style="display: none;">
+  <div class="rotate-box">
+    <p>📱 Gire o celular para jogar em tela cheia</p>
+  </div>
+</div>
 
 </body>
 </html>
-<footer id="update-advice" style="position: fixed; bottom: 0; width: 100%; background: #111; color: #fff; font-size: 14px; text-align: center; padding: 6px 10px; z-index: 999;">
-  <p>
-    ⚠️ Se o jogo não estiver funcionando corretamente, atualize a página:
-    <strong>no PC, aperte Ctrl + F5</strong> •
-    <strong>no celular, toque no botão de recarregar e segure para limpar o cache</strong>
-  </p>
-</footer>

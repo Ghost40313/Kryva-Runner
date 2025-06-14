@@ -381,3 +381,25 @@ body.inverted * {
 #difficulty-menu li:hover {
   background-color: #444;
 }
+#rotate-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000d0;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  text-align: center;
+}
+
+.rotate-box {
+  font-size: 18px;
+  padding: 20px;
+  background: #222;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #000;
+}

@@ -132,17 +132,30 @@ function checkCollision() {
 
 function gameOver() {
   gameRunning = false;
+
+  const recordKey = `record-${selectedDifficulty}`;
+  const currentRecord = parseInt(localStorage.getItem(recordKey)) || 0;
+  if (score > currentRecord) {
+    localStorage.setItem(recordKey, score);
+  }
+
   gameOverEl.style.display = 'block';
   music.pause();
   gameOverSound.play();
   clearInterval(scoreInterval);
   clearInterval(obstacleSpawner);
   clearInterval(collisionCheck);
+
   dino.classList.add('stop');
   document.body.classList.remove('warp');
-  document.body.classList.remove('inverted');
-  isInverted = false;
+  if (isInverted) {
+    document.body.classList.remove('inverted');
+    isInverted = false;
+  }
+
+  updateRecordDisplay(); // ⬅️ Atualiza o valor exibido na tela
 }
+
 
 function resetGame() {
   dino.classList.remove('stop');
@@ -303,3 +316,18 @@ difficultyMenu.querySelectorAll('li').forEach(item => {
     difficultyMenu.classList.remove('show');
   });
 });
+function checkOrientation() {
+  const warning = document.getElementById('rotate-warning');
+  const isPortrait = window.innerHeight > window.innerWidth;
+
+  if (isPortrait && window.innerWidth <= 768) {
+    warning.style.display = 'flex';
+  } else {
+    warning.style.display = 'none';
+  }
+}
+
+// Verifica quando gira o celular ou redimensiona
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
+document.addEventListener('DOMContentLoaded', checkOrientation);
