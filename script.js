@@ -258,6 +258,12 @@ document.addEventListener('touchstart', () => {
   jump();
 });
 
+document.addEventListener('touchstart', (e) => {
+  // Ignora toques em botões ou menus
+  if (e.target.closest('#menu') || e.target.closest('#restart') || e.target.closest('#startBtn')) return;
+  jump();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   updateRecordDisplay();
 });

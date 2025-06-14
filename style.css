@@ -267,3 +267,7 @@ body.inverted * {
   from { left: -200px; }
   to { left: 100vw; }
 }
+
+.game-container {
+  touch-action: manipulation;
+}
