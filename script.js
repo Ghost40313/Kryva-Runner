@@ -153,9 +153,8 @@ function gameOver() {
     isInverted = false;
   }
 
-  updateRecordDisplay(); // ⬅️ Atualiza o valor exibido na tela
+  updateRecordDisplay();
 }
-
 
 function resetGame() {
   dino.classList.remove('stop');
@@ -294,40 +293,30 @@ document.querySelector('.game-container').addEventListener('touchstart', e => {
 document.addEventListener('DOMContentLoaded', () => {
   updateRecordDisplay();
 });
-// Novo menu de dificuldade com visual moderno
-const difficultyToggle = document.getElementById('difficulty-toggle');
-const difficultyMenu = document.getElementById('difficulty-menu');
-const difficultyCurrent = document.getElementById('difficulty-current');
 
-difficultyToggle.addEventListener('click', () => {
-  difficultyMenu.classList.toggle('show');
-});
+// Atalho secreto para ativar trapaça no celular (5 toques rápidos no canto inferior direito)
+let cheatTouchCount = 0;
+let lastCheatTouch = 0;
 
-difficultyMenu.querySelectorAll('li').forEach(item => {
-  item.addEventListener('click', () => {
-    const mode = item.dataset.mode;
-    selectedDifficulty = mode;
-    difficultyCurrent.textContent = item.textContent;
-    difficultyButtons.forEach(b => b.classList.remove('active'));
-    document.querySelector(`.difficulty-btn[data-mode="${mode}"]`)?.classList.add('active');
-    difficultySelect.value = mode;
-    updateRecordDisplay();
-    resetGame();
-    difficultyMenu.classList.remove('show');
-  });
-});
-function checkOrientation() {
-  const warning = document.getElementById('rotate-warning');
-  const isPortrait = window.innerHeight > window.innerWidth;
+document.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  const x = touch.clientX;
+  const y = touch.clientY;
 
-  if (isPortrait && window.innerWidth <= 768) {
-    warning.style.display = 'flex';
-  } else {
-    warning.style.display = 'none';
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  if (x > screenWidth - 80 && y > screenHeight - 80) {
+    const now = Date.now();
+    if (now - lastCheatTouch < 3000) {
+      cheatTouchCount++;
+      if (cheatTouchCount >= 5) {
+        autoJump = true;
+        cheatTouchCount = 0;
+      }
+    } else {
+      cheatTouchCount = 1;
+    }
+    lastCheatTouch = now;
   }
-}
-
-// Verifica quando gira o celular ou redimensiona
-window.addEventListener('resize', checkOrientation);
-window.addEventListener('orientationchange', checkOrientation);
-document.addEventListener('DOMContentLoaded', checkOrientation);
+});
