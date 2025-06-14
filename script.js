@@ -14,6 +14,7 @@ const startBtn = document.getElementById('startBtn');
 const difficultyButtons = document.querySelectorAll('.difficulty-btn');
 const menu = document.getElementById('menu');
 const rankingList = document.getElementById('ranking-list');
+const difficultySelect = document.getElementById('difficulty-select');
 
 let music = new Audio('music.mp3');
 const jumpSound = new Audio('jump.mp3');
@@ -26,8 +27,14 @@ let obstacleSpawner, scoreInterval, collisionCheck;
 let hasInvertedAutomatically = false;
 let musicChanged = false;
 let warpModeActivated = false;
+let lastObstacleTime = 0;
 
-const difficultySpeeds = { easy: 1.5, medium: 0.75, hard: 0.3 };
+const difficultySpeeds = {
+  easy: 1.5,
+  medium: 0.75,
+  hard: 0.3,
+  expert: 0.3
+};
 
 function jump(extraDelay = 0) {
   if (isJumping || !gameRunning) return;
@@ -60,6 +67,13 @@ function jump(extraDelay = 0) {
 }
 
 function createObstacle() {
+  const now = Date.now();
+  const minSpacing = selectedDifficulty === 'easy' ? 1300 :
+                     selectedDifficulty === 'medium' ? 1000 :
+                     selectedDifficulty === 'hard' ? 800 : 700;
+  if (now - lastObstacleTime < minSpacing) return;
+  lastObstacleTime = now;
+
   const obstacle = document.createElement('div');
   obstacle.classList.add('obstacle');
 
@@ -91,24 +105,25 @@ function createObstacle() {
 function checkCollision() {
   const dinoRect = dino.getBoundingClientRect();
   const obstacles = document.querySelectorAll('.obstacle');
+
   obstacles.forEach(obs => {
     const obsRect = obs.getBoundingClientRect();
     const horizontal = dinoRect.right > obsRect.left && dinoRect.left < obsRect.right;
     const vertical = dinoRect.bottom > obsRect.top && dinoRect.top < obsRect.bottom;
     const dist = obsRect.left - dinoRect.right;
 
-    const antecipacao =
-      speed <= 0.3 ? 260 :
-      speed <= 0.4 ? 220 :
-      speed <= 0.75 ? 160 : 120;
+    const antecipacao = speed <= 0.3 ? 280 :
+                        speed <= 0.4 ? 240 :
+                        speed <= 0.75 ? 180 : 140;
 
-    const tempoExtraNoAr =
-      speed <= 0.3 ? 7 :
-      speed <= 0.4 ? 6 :
-      speed <= 0.75 ? 4 : 3;
+    const tempoExtraNoAr = speed <= 0.3 ? 8 :
+                           speed <= 0.4 ? 6 :
+                           speed <= 0.75 ? 4 : 3;
 
-    if (autoJump && !isJumping && obs.classList.contains('ground') && dist > 10 && dist < antecipacao) {
-      jump(tempoExtraNoAr);
+    if (autoJump && !isJumping && dist > 10 && dist < antecipacao) {
+      const isGround = obs.classList.contains('ground');
+      const isDangerousAir = obs.classList.contains('air') && (obsRect.bottom > dinoRect.top + 20);
+      if (isGround || isDangerousAir) jump(tempoExtraNoAr);
     }
 
     if (horizontal && vertical) gameOver();
@@ -123,14 +138,14 @@ function gameOver() {
   clearInterval(scoreInterval);
   clearInterval(obstacleSpawner);
   clearInterval(collisionCheck);
+  dino.classList.add('stop');
   document.body.classList.remove('warp');
-  if (isInverted) {
-    document.body.classList.remove('inverted');
-    isInverted = false;
-  }
+  document.body.classList.remove('inverted');
+  isInverted = false;
 }
 
 function resetGame() {
+  dino.classList.remove('stop');
   score = 0;
   jumpHeight = 0;
   isJumping = false;
@@ -139,21 +154,28 @@ function resetGame() {
   warpModeActivated = false;
   gameRunning = true;
   speed = difficultySpeeds[selectedDifficulty];
-
   dino.style.bottom = '0px';
   dino.style.top = '';
-  document.body.classList.remove('inverted');
-  document.body.classList.remove('warp');
+  document.body.classList.remove('inverted', 'warp');
   isInverted = false;
-
   gameOverEl.style.display = 'none';
   scoreEl.textContent = "Pontuação: 0";
   obstaclesContainer.innerHTML = '';
-
   music.pause();
-  music = new Audio('music.mp3');
+  music = new Audio(selectedDifficulty === 'expert' ? 'music2.mp3' : 'music.mp3');
   music.loop = true;
   music.play();
+
+  if (selectedDifficulty === 'expert') {
+    document.body.classList.add('inverted');
+    document.body.classList.add('warp');
+    isInverted = true;
+    warpModeActivated = true;
+    musicChanged = true;
+    hasInvertedAutomatically = true;
+    dino.style.top = '0px';
+    dino.style.bottom = '';
+  }
 
   obstacleSpawner = setInterval(createObstacle, 1500);
   scoreInterval = setInterval(() => {
@@ -194,7 +216,6 @@ function resetGame() {
       music.play();
       musicChanged = true;
     }
-
   }, 100);
 
   collisionCheck = setInterval(checkCollision, 10);
@@ -209,8 +230,8 @@ function startGame() {
 function updateRecordDisplay() {
   const record = localStorage.getItem(`record-${selectedDifficulty}`) || 0;
   recordValue.textContent = record;
-  const names = { easy: 'Fácil', medium: 'Médio', hard: 'Difícil' };
-  difficultyLabel.textContent = names[selectedDifficulty];
+  const names = { easy: 'Fácil', medium: 'Médio', hard: 'Difícil', expert: 'Expert' };
+  difficultyLabel.textContent = names[selectedDifficulty] || selectedDifficulty;
 }
 
 difficultyButtons.forEach(btn => {
@@ -218,8 +239,17 @@ difficultyButtons.forEach(btn => {
     difficultyButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedDifficulty = btn.dataset.mode;
+    difficultySelect.value = selectedDifficulty;
     startBtn.disabled = false;
   });
+});
+
+difficultySelect.addEventListener('change', () => {
+  selectedDifficulty = difficultySelect.value;
+  difficultyButtons.forEach(b => b.classList.remove('active'));
+  document.querySelector(`.difficulty-btn[data-mode="${selectedDifficulty}"]`)?.classList.add('active');
+  updateRecordDisplay();
+  resetGame();
 });
 
 startBtn.addEventListener('click', startGame);
@@ -243,7 +273,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Pulo ao tocar na tela (mobile)
 document.querySelector('.game-container').addEventListener('touchstart', e => {
   if (e.target.closest('#menu') || e.target.closest('#restart') || e.target.closest('#startBtn')) return;
   jump();
@@ -251,4 +280,26 @@ document.querySelector('.game-container').addEventListener('touchstart', e => {
 
 document.addEventListener('DOMContentLoaded', () => {
   updateRecordDisplay();
+});
+// Novo menu de dificuldade com visual moderno
+const difficultyToggle = document.getElementById('difficulty-toggle');
+const difficultyMenu = document.getElementById('difficulty-menu');
+const difficultyCurrent = document.getElementById('difficulty-current');
+
+difficultyToggle.addEventListener('click', () => {
+  difficultyMenu.classList.toggle('show');
+});
+
+difficultyMenu.querySelectorAll('li').forEach(item => {
+  item.addEventListener('click', () => {
+    const mode = item.dataset.mode;
+    selectedDifficulty = mode;
+    difficultyCurrent.textContent = item.textContent;
+    difficultyButtons.forEach(b => b.classList.remove('active'));
+    document.querySelector(`.difficulty-btn[data-mode="${mode}"]`)?.classList.add('active');
+    difficultySelect.value = mode;
+    updateRecordDisplay();
+    resetGame();
+    difficultyMenu.classList.remove('show');
+  });
 });

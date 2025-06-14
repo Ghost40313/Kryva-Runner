@@ -271,3 +271,113 @@ body.inverted * {
 .game-container {
   touch-action: manipulation;
 }
+#difficulty-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+}
+
+#difficultyBtn {
+  padding: 6px 12px;
+  background-color: #222;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#difficultyDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  padding: 0;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+  display: none;
+}
+
+#difficultyDropdown li {
+  padding: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #eee;
+}
+
+#difficultyDropdown li:hover {
+  background-color: #ccc;
+}
+
+#difficultyDropdown.show {
+  display: block;
+}
+#dino.stop {
+  animation: none !important;
+}
+#difficulty-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  font-family: 'Arial', sans-serif;
+}
+
+#difficulty-toggle {
+  background-color: #1e1e1e;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s;
+}
+
+#difficulty-toggle:hover {
+  background-color: #2c2c2c;
+}
+
+#difficulty-toggle .arrow {
+  font-size: 12px;
+}
+
+#difficulty-menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+  background-color: #2b2b2b;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#difficulty-menu.show {
+  max-height: 300px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#difficulty-menu li {
+  padding: 10px 16px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#difficulty-menu li:hover {
+  background-color: #444;
+}
