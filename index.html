@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -22,7 +23,6 @@
 </head>
 <body>
 
-  <!-- Seletor de dificuldade -->
   <div id="difficulty-toggle" style="position: absolute; top: 10px; left: 10px; z-index: 20;">
     <label for="difficulty-select" style="color: white; font-weight: bold;">DIFICULDADE:</label><br>
     <select id="difficulty-select">
@@ -33,7 +33,6 @@
     </select>
   </div>
 
-  <!-- MENU INICIAL -->
   <div id="menu">
     <h1>KRYVA RUNNER</h1>
     <div id="difficulty-selection">
@@ -50,7 +49,6 @@
     </div>
   </div>
 
-  <!-- JOGO -->
   <div class="game-container" id="gameArea" style="touch-action: manipulation;">
     <div id="dino"></div>
     <div id="obstacles-container"></div>
@@ -61,18 +59,17 @@
     </div>
   </div>
 
-  <!-- RECORDES -->
-  <div id="record-display">
-    <p>Recorde: <span id="record-value">0</span></p>
+  <div id="record-display" style="position: relative;">
+    <div id="cheat-touch-area"
+         style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 5;"></div>
+    <p><strong>Recorde:</strong> <span id="record-value">0</span></p>
     <p>Dificuldade: <span id="difficulty-label">Fácil</span></p>
   </div>
 
-  <!-- NUVENS -->
   <div class="cloud"></div>
   <div class="cloud"></div>
   <div class="cloud"></div>
 
-  <!-- RODAPÉ COM AVISO -->
   <footer id="update-advice" style="position: fixed; bottom: 0; width: 100%; background: #111; color: #fff; font-size: 14px; text-align: center; padding: 10px 40px 10px 10px; z-index: 999;">
     <p style="margin: 0;">
       ⚠️ Se o jogo não estiver funcionando corretamente, atualize a página:
@@ -85,20 +82,8 @@
     </button>
   </footer>
 
-  <!-- AVISO PARA GIRAR A TELA -->
-  <div id="rotate-warning" style="display: none;">
-    <div class="rotate-box">
-      <p>📱 Gire o celular para jogar em tela cheia</p>
-    </div>
-  </div>
-
-<!-- ÁREA SECRETA PARA TOQUE (canto inferior esquerdo agora) -->
-<div id="cheat-zone" style="position: fixed; bottom: 0; left: 0; width: 60px; height: 60px; z-index: 999;"></div>
-
-
   <script src="script.js"></script>
   <script>
-    // Fecha aviso de atualização
     document.addEventListener('DOMContentLoaded', () => {
       const closeBtn = document.getElementById('close-advice-btn');
       const footer = document.getElementById('update-advice');
@@ -108,34 +93,34 @@
         });
       }
     });
+  </script>
 
-     // Ativar trapaça no celular com 5 toques rápidos na área secreta
-  (function () {
-    let touchCount = 0;
-    let firstTouchTime = 0;
-    const cheatZone = document.getElementById('cheat-zone');
+  <script>
+    (function () {
+      let touchCount = 0;
+      let firstTouchTime = 0;
+      const cheatArea = document.getElementById('cheat-touch-area');
 
-    cheatZone.addEventListener('touchstart', () => {
-      const now = Date.now();
+      cheatArea.addEventListener('touchstart', () => {
+        const now = Date.now();
 
-      if (touchCount === 0) {
-        firstTouchTime = now;
-        touchCount = 1;
-      } else {
-        if (now - firstTouchTime <= 3000) {
-          touchCount++;
-          if (touchCount >= 5) {
-            window.autoJump = true;
-            touchCount = 0;
-          }
-        } else {
-          touchCount = 1;
+        if (touchCount === 0) {
           firstTouchTime = now;
+          touchCount = 1;
+        } else {
+          if (now - firstTouchTime <= 2000) {
+            touchCount++;
+            if (touchCount >= 3) {
+              window.autoJump = true;
+              touchCount = 0;
+            }
+          } else {
+            touchCount = 1;
+            firstTouchTime = now;
+          }
         }
-      }
-    });
-  })();
-</script>
-
+      });
+    })();
+  </script>
 </body>
 </html>

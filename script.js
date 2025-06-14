@@ -112,18 +112,13 @@ function checkCollision() {
     const vertical = dinoRect.bottom > obsRect.top && dinoRect.top < obsRect.bottom;
     const dist = obsRect.left - dinoRect.right;
 
-    const antecipacao = speed <= 0.3 ? 280 :
-                        speed <= 0.4 ? 240 :
-                        speed <= 0.75 ? 180 : 140;
-
-    const tempoExtraNoAr = speed <= 0.3 ? 8 :
-                           speed <= 0.4 ? 6 :
-                           speed <= 0.75 ? 4 : 3;
+    const antecipacao = speed <= 0.3 ? 300 : speed <= 0.4 ? 260 : speed <= 0.75 ? 200 : 150;
+    const tempoExtraNoAr = speed <= 0.3 ? 10 : speed <= 0.4 ? 8 : speed <= 0.75 ? 5 : 3;
 
     if (autoJump && !isJumping && dist > 10 && dist < antecipacao) {
       const isGround = obs.classList.contains('ground');
-      const isDangerousAir = obs.classList.contains('air') && (obsRect.bottom > dinoRect.top + 20);
-      if (isGround || isDangerousAir) jump(tempoExtraNoAr);
+      const isLowAir = obs.classList.contains('air') && (obsRect.bottom > dinoRect.top + 30);
+      if (isGround || isLowAir) jump(tempoExtraNoAr);
     }
 
     if (horizontal && vertical) gameOver();
@@ -132,27 +127,23 @@ function checkCollision() {
 
 function gameOver() {
   gameRunning = false;
-
   const recordKey = `record-${selectedDifficulty}`;
   const currentRecord = parseInt(localStorage.getItem(recordKey)) || 0;
   if (score > currentRecord) {
     localStorage.setItem(recordKey, score);
   }
-
   gameOverEl.style.display = 'block';
   music.pause();
   gameOverSound.play();
   clearInterval(scoreInterval);
   clearInterval(obstacleSpawner);
   clearInterval(collisionCheck);
-
   dino.classList.add('stop');
   document.body.classList.remove('warp');
   if (isInverted) {
     document.body.classList.remove('inverted');
     isInverted = false;
   }
-
   updateRecordDisplay();
 }
 
@@ -179,8 +170,7 @@ function resetGame() {
   music.play();
 
   if (selectedDifficulty === 'expert') {
-    document.body.classList.add('inverted');
-    document.body.classList.add('warp');
+    document.body.classList.add('inverted', 'warp');
     isInverted = true;
     warpModeActivated = true;
     musicChanged = true;
@@ -201,11 +191,7 @@ function resetGame() {
       else if (selectedDifficulty === 'hard' && speed > 0.3) speed -= 0.02;
     }
 
-    if (score >= 1000 && !warpModeActivated) {
-      document.body.classList.add('warp');
-      warpModeActivated = true;
-    }
-
+    if (score >= 1000 && !warpModeActivated) document.body.classList.add('warp');
     if (score >= 1000 && !hasInvertedAutomatically) {
       document.body.classList.add('inverted');
       isInverted = true;
@@ -213,14 +199,12 @@ function resetGame() {
       dino.style.top = '0px';
       dino.style.bottom = '';
     }
-
     if (score >= 1500 && isInverted) {
       document.body.classList.remove('inverted');
       isInverted = false;
       dino.style.bottom = '0px';
       dino.style.top = '';
     }
-
     if (score >= 1000 && !musicChanged) {
       music.pause();
       music = new Audio('music2.mp3');
@@ -292,31 +276,4 @@ document.querySelector('.game-container').addEventListener('touchstart', e => {
 
 document.addEventListener('DOMContentLoaded', () => {
   updateRecordDisplay();
-});
-
-// Atalho secreto para ativar trapaça no celular (5 toques rápidos no canto inferior direito)
-let cheatTouchCount = 0;
-let lastCheatTouch = 0;
-
-document.addEventListener('touchstart', (e) => {
-  const touch = e.touches[0];
-  const x = touch.clientX;
-  const y = touch.clientY;
-
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-
-  if (x > screenWidth - 80 && y > screenHeight - 80) {
-    const now = Date.now();
-    if (now - lastCheatTouch < 3000) {
-      cheatTouchCount++;
-      if (cheatTouchCount >= 5) {
-        autoJump = true;
-        cheatTouchCount = 0;
-      }
-    } else {
-      cheatTouchCount = 1;
-    }
-    lastCheatTouch = now;
-  }
 });
