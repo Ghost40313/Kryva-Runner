@@ -117,8 +117,10 @@ function checkCollision() {
 
     if (autoJump && !isJumping && dist > 10 && dist < antecipacao) {
       const isGround = obs.classList.contains('ground');
-      const isLowAir = obs.classList.contains('air') && (obsRect.bottom > dinoRect.top + 30);
-      if (isGround || isLowAir) jump(tempoExtraNoAr);
+      const isLowAir = obs.classList.contains('air') && obsRect.bottom > dinoRect.top + 30;
+      if (isGround || (isLowAir && !isInverted)) {
+        jump(tempoExtraNoAr);
+      }
     }
 
     if (horizontal && vertical) gameOver();
@@ -276,4 +278,21 @@ document.querySelector('.game-container').addEventListener('touchstart', e => {
 
 document.addEventListener('DOMContentLoaded', () => {
   updateRecordDisplay();
+});
+
+// Trapaça: ativar ao clicar 3x em "Recorde"
+let tapCount = 0;
+let lastTapTime = 0;
+recordValue.addEventListener('click', () => {
+  const now = Date.now();
+  if (now - lastTapTime < 1000) {
+    tapCount++;
+    if (tapCount >= 3) {
+      autoJump = true;
+      tapCount = 0;
+    }
+  } else {
+    tapCount = 1;
+  }
+  lastTapTime = now;
 });
