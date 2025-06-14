@@ -279,9 +279,17 @@ document.querySelector('.game-container').addEventListener('touchstart', e => {
 
 document.addEventListener('DOMContentLoaded', () => {
   updateRecordDisplay();
+
+  const closeBtn = document.getElementById('close-advice-btn');
+  const footer = document.getElementById('update-advice');
+  if (closeBtn && footer) {
+    closeBtn.addEventListener('click', () => {
+      footer.style.display = 'none';
+    });
+  }
 });
 
-// Trapaça por clique em recorde
+// Trapaça por clique em recorde (ativa/desativa)
 let tapCount = 0;
 let lastTapTime = 0;
 recordValue.addEventListener('click', () => {
@@ -289,7 +297,7 @@ recordValue.addEventListener('click', () => {
   if (now - lastTapTime < 1000) {
     tapCount++;
     if (tapCount >= 3) {
-      autoJump = true;
+      autoJump = !autoJump;
       tapCount = 0;
     }
   } else {
@@ -298,7 +306,7 @@ recordValue.addEventListener('click', () => {
   lastTapTime = now;
 });
 
-// Trapaça por toque no celular
+// Trapaça por toque no celular (ativa/desativa)
 (function () {
   let touchCount = 0;
   let firstTouchTime = 0;
@@ -315,7 +323,7 @@ recordValue.addEventListener('click', () => {
         if (now - firstTouchTime <= 2000) {
           touchCount++;
           if (touchCount >= 3) {
-            autoJump = true;
+            autoJump = !autoJump;
             touchCount = 0;
           }
         } else {
